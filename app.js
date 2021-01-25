@@ -1,12 +1,33 @@
-const express = require("express");
-const app = express(); 
+var request  = require("express");
+var express = require("express");
+var app = express(); 
 
-app.get("/",(req , res ) => {
-    res.send("hello parth");
+//Mysql Database Connection parameters
+var mysql = require('mysql');
+
+var connection  = mysql.createConnection({
+  host: "localhost",
+  port:3306,
+  user: "root",
+  password: "admin",
+  database: 'emsdb'
 });
-app.get("/about",(req , res ) => {
-    res.send("hello this is about page");
-});
- app.listen(8000, () => {
-     console.log("listing the port at 8000")
- })
+
+connection.connect(function(error) {
+    if (error) throw error;
+    console.log(" Database Connected!");
+  });
+
+  app.get('/' , function(req , resp){
+
+    connection.query("SELECT * FROM e_tbl" , function (error , rows){
+      if(!!error){
+      console.log('error in the query');
+      } else {
+      resp.send(rows);
+    
+    }
+      });
+    })
+app.listen(8000);
+ 
